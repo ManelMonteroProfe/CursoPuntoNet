@@ -1,0 +1,10 @@
+D:\proyectos\winforms04\winforms04\obj\Debug\winforms04.csproj.AssemblyReference.cache
+D:\proyectos\winforms04\winforms04\obj\Debug\WinForms04.Form1.resources
+D:\proyectos\winforms04\winforms04\obj\Debug\winforms04.Properties.Resources.resources
+D:\proyectos\winforms04\winforms04\obj\Debug\winforms04.csproj.GenerateResource.cache
+D:\proyectos\winforms04\winforms04\obj\Debug\winforms04.csproj.CoreCompileInputs.cache
+D:\proyectos\winforms04\winforms04\bin\Debug\winforms04.exe.config
+D:\proyectos\winforms04\winforms04\bin\Debug\winforms04.exe
+D:\proyectos\winforms04\winforms04\bin\Debug\winforms04.pdb
+D:\proyectos\winforms04\winforms04\obj\Debug\winforms04.exe
+D:\proyectos\winforms04\winforms04\obj\Debug\winforms04.pdb

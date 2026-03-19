@@ -1,0 +1,13 @@
+/* Para ver los campos de una tabla provincias*/
+/* Motor BD: SQL SERVER                      */
+
+SELECT
+  COLUMN_NAME,
+  DATA_TYPE,
+  CHARACTER_MAXIMUM_LENGTH,
+  IS_NULLABLE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_SCHEMA = 'dbo'
+  AND TABLE_NAME = 'provincias'
+ORDER BY ORDINAL_POSITION;
+GO

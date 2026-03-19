@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CRUD Provincias</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 16px; }
+    .fila { display:flex; gap:10px; flex-wrap: wrap; align-items: end; margin-bottom: 12px; }
+    label { font-size: 12px; display:block; margin-bottom:4px; }
+    input { padding: 8px; width: 200px; }
+    button { padding: 8px 10px; cursor: pointer; }
+    table { border-collapse: collapse; width: 100%; max-width: 760px; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f2f2f2; }
+    #estado { margin: 8px 0; }
+    .acciones button { margin-right: 6px; }
+  </style>
+</head>
+<body>
+  <h2>CRUD de Provincias (SQL Server)</h2>
+
+  <div class="fila">
+    <div>
+      <label>ID Provincia</label>
+      <input id="txtId" type="number" placeholder="Ej: 10" />
+    </div>
+    <div>
+      <label>Provincia</label>
+      <input id="txtNombre" type="text" placeholder="Ej: Valencia" />
+    </div>
+
+    <button id="btnCrear">Crear</button>
+    <button id="btnActualizar">Actualizar</button>
+    <button id="btnListar">Listar</button>
+  </div>
+
+  <p id="estado"></p>
+
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Provincia</th><th>Acciones</th></tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+<script>
+  const API = "/api/provincias";
+  const estado = document.getElementById("estado");
+  const tbody = document.getElementById("tbody");
+  const txtId = document.getElementById("txtId");
+  const txtNombre = document.getElementById("txtNombre");
+
+  function setEstado(msg) { estado.textContent = msg; }
+
+  async function listar() {
+    setEstado("Cargando...");
+    tbody.innerHTML = "";
+    const resp = await fetch(API);
+    const data = await resp.json();
+
+    for (const p of data) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${p.idprovincia}</td>
+        <td>${p.provincia}</td>
+        <td class="acciones">
+          <button onclick="cargarEnFormulario(${p.idprovincia}, '${escapeHtml(p.provincia)}')">Editar</button>
+          <button onclick="borrar(${p.idprovincia})">Borrar</button>
+        </td>`;
+      tbody.appendChild(tr);
+    }
+    setEstado(`Mostrando ${data.length} provincias.`);
+  }
+
+  window.cargarEnFormulario = function(id, provincia) {
+    txtId.value = id;
+    txtNombre.value = provincia;
+    setEstado("Editando: cambia el texto y pulsa Actualizar.");
+  }
+
+  async function crear() {
+    const id = Number(txtId.value);
+    const provincia = txtNombre.value.trim();
+
+    if (!id || id <= 0) { setEstado("ID inválido."); return; }
+    if (!provincia) { setEstado("Provincia obligatoria."); return; }
+
+    const resp = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idprovincia: id, provincia })
+    });
+
+    if (resp.status === 201) {
+      setEstado("Creada correctamente.");
+      txtId.value = ""; txtNombre.value = "";
+      await listar();
+      return;
+    }
+
+    const err = await safeJson(resp);
+    setEstado("Error al crear: " + (err.mensaje ?? resp.status));
+  }
+
+  async function actualizar() {
+    const id = Number(txtId.value);
+    const provincia = txtNombre.value.trim();
+
+    if (!id || id <= 0) { setEstado("ID inválido."); return; }
+    if (!provincia) { setEstado("Provincia obligatoria."); return; }
+
+    const resp = await fetch(`${API}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ provincia })
+    });
+
+    if (resp.ok) {
+      setEstado("Actualizada correctamente.");
+      txtId.value = ""; txtNombre.value = "";
+      await listar();
+      return;
+    }
+
+    const err = await safeJson(resp);
+    setEstado("Error al actualizar: " + (err.mensaje ?? resp.status));
+  }
+
+  window.borrar = async function(id) {
+    if (!confirm("¿Seguro que quieres borrar la provincia " + id + "?")) return;
+
+    const resp = await fetch(`${API}/${id}`, { method: "DELETE" });
+
+    if (resp.status === 204) {
+      setEstado("Borrada correctamente.");
+      await listar();
+      return;
+    }
+
+    const err = await safeJson(resp);
+    setEstado("Error al borrar: " + (err.mensaje ?? resp.status));
+  }
+
+  async function safeJson(resp) {
+    try { return await resp.json(); } catch { return {}; }
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  document.getElementById("btnListar").addEventListener("click", listar);
+  document.getElementById("btnCrear").addEventListener("click", crear);
+  document.getElementById("btnActualizar").addEventListener("click", actualizar);
+
+  listar();
+</script>
+</body>
+</html>

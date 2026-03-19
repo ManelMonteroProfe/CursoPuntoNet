@@ -1,0 +1,76 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\GOOGLE\\MANELMONTEROPROFE\\CURSO PROGRAMACION PUNTO NET\\CURSO PUNTO NET\\MODULO 05\\EJERCICIOS\\EJERCICIOS\\EJERCICIO 01. TRY-CATCH\\M5errores\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4FD4D7E5-99BC-4B89-84FD-7FEC6D96B9B8}|M5errores\\M5errores.csproj|d:\\google\\manelmonteroprofe\\curso programacion punto net\\curso punto net\\modulo 05\\ejercicios\\ejercicios\\ejercicio 01. try-catch\\m5errores\\m5errores\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4FD4D7E5-99BC-4B89-84FD-7FEC6D96B9B8}|M5errores\\M5errores.csproj|solutionrelative:m5errores\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4FD4D7E5-99BC-4B89-84FD-7FEC6D96B9B8}|M5errores\\M5errores.csproj|D:\\GOOGLE\\MANELMONTEROPROFE\\CURSO PROGRAMACION PUNTO NET\\CURSO PUNTO NET\\MODULO 05\\EJERCICIOS\\EJERCICIOS\\EJERCICIO 01. TRY-CATCH\\M5errores\\m5errores\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{4FD4D7E5-99BC-4B89-84FD-7FEC6D96B9B8}|M5errores\\M5errores.csproj|solutionrelative:m5errores\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4FD4D7E5-99BC-4B89-84FD-7FEC6D96B9B8}|M5errores\\M5errores.csproj|D:\\GOOGLE\\MANELMONTEROPROFE\\CURSO PROGRAMACION PUNTO NET\\CURSO PUNTO NET\\MODULO 05\\EJERCICIOS\\EJERCICIOS\\EJERCICIO 01. TRY-CATCH\\M5errores\\m5errores\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4FD4D7E5-99BC-4B89-84FD-7FEC6D96B9B8}|M5errores\\M5errores.csproj|solutionrelative:m5errores\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "D:\\GOOGLE\\MANELMONTEROPROFE\\CURSO PROGRAMACION PUNTO NET\\CURSO PUNTO NET\\MODULO 05\\EJERCICIOS\\EJERCICIOS\\EJERCICIO 01. TRY-CATCH\\M5errores\\M5errores\\Form1.cs",
+              "RelativeDocumentMoniker": "M5errores\\Form1.cs",
+              "ToolTip": "D:\\GOOGLE\\MANELMONTEROPROFE\\CURSO PROGRAMACION PUNTO NET\\CURSO PUNTO NET\\MODULO 05\\EJERCICIOS\\EJERCICIOS\\EJERCICIO 01. TRY-CATCH\\M5errores\\M5errores\\Form1.cs",
+              "RelativeToolTip": "M5errores\\Form1.cs",
+              "ViewState": "AgIAAG4AAAAAAAAAAAAAwHUAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T10:40:54.29Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\GOOGLE\\MANELMONTEROPROFE\\CURSO PROGRAMACION PUNTO NET\\CURSO PUNTO NET\\MODULO 05\\EJERCICIOS\\EJERCICIOS\\EJERCICIO 01. TRY-CATCH\\M5errores\\M5errores\\Program.cs",
+              "RelativeDocumentMoniker": "M5errores\\Program.cs",
+              "ToolTip": "D:\\GOOGLE\\MANELMONTEROPROFE\\CURSO PROGRAMACION PUNTO NET\\CURSO PUNTO NET\\MODULO 05\\EJERCICIOS\\EJERCICIOS\\EJERCICIO 01. TRY-CATCH\\M5errores\\M5errores\\Program.cs",
+              "RelativeToolTip": "M5errores\\Program.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T10:39:17.581Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.cs [Dise\u00F1o]",
+              "DocumentMoniker": "D:\\GOOGLE\\MANELMONTEROPROFE\\CURSO PROGRAMACION PUNTO NET\\CURSO PUNTO NET\\MODULO 05\\EJERCICIOS\\EJERCICIOS\\EJERCICIO 01. TRY-CATCH\\M5errores\\M5errores\\Form1.cs",
+              "RelativeDocumentMoniker": "M5errores\\Form1.cs",
+              "ToolTip": "D:\\proyectos\\M5errores\\M5errores\\Form1.cs [Dise\u00F1o]",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\..\\..\\..\\proyectos\\M5errores\\M5errores\\Form1.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T10:38:32.181Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

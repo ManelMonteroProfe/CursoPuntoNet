@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\proyectos\\winforms04\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5C366DF6-BA32-4CE8-86AA-39E985C2EFD1}|winforms04\\winforms04.csproj|D:\\proyectos\\winforms04\\winforms04\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5C366DF6-BA32-4CE8-86AA-39E985C2EFD1}|winforms04\\winforms04.csproj|solutionrelative:winforms04\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5C366DF6-BA32-4CE8-86AA-39E985C2EFD1}|winforms04\\winforms04.csproj|d:\\proyectos\\winforms04\\winforms04\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{5C366DF6-BA32-4CE8-86AA-39E985C2EFD1}|winforms04\\winforms04.csproj|solutionrelative:winforms04\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5C366DF6-BA32-4CE8-86AA-39E985C2EFD1}|winforms04\\winforms04.csproj|D:\\proyectos\\winforms04\\winforms04\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5C366DF6-BA32-4CE8-86AA-39E985C2EFD1}|winforms04\\winforms04.csproj|solutionrelative:winforms04\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "D:\\proyectos\\winforms04\\winforms04\\Form1.cs",
+              "RelativeDocumentMoniker": "winforms04\\Form1.cs",
+              "ToolTip": "D:\\proyectos\\winforms04\\winforms04\\Form1.cs",
+              "RelativeToolTip": "winforms04\\Form1.cs",
+              "ViewState": "AgIAAEYAAAAAAAAAAAAAAE4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-24T21:48:13.945Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.cs [Dise\u00F1o]",
+              "DocumentMoniker": "D:\\proyectos\\winforms04\\winforms04\\Form1.cs",
+              "RelativeDocumentMoniker": "winforms04\\Form1.cs",
+              "ToolTip": "D:\\proyectos\\winforms04\\winforms04\\Form1.cs [Dise\u00F1o]",
+              "RelativeToolTip": "winforms04\\Form1.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-25T07:46:03.196Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\proyectos\\winforms04\\winforms04\\Program.cs",
+              "RelativeDocumentMoniker": "winforms04\\Program.cs",
+              "ToolTip": "D:\\proyectos\\winforms04\\winforms04\\Program.cs",
+              "RelativeToolTip": "winforms04\\Program.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-24T21:50:21.287Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

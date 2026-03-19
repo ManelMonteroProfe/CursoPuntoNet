@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║  CURSAULA — Plataforma Didáctica   para curso WEB                    ║
+  ║  Archivo: galeria.html                                               ║
+  ║  Descripción: Galería de imágenes con slideshow automático en bucle  ║
+  ║               infinito. Cada imagen se muestra durante 2 segundos    ║
+  ║               y se pasa a la siguiente con una transición de         ║
+  ║               opacidad (fade). El usuario puede pausar, avanzar      ║
+  ║               y retroceder manualmente.                              ║
+  ║                                                                      ║
+  ║  Archivos relacionados:                                              ║
+  ║    · styles.css   → Estilos de la galería (sección "── GALERÍA ──")  ║
+  ║    · index.html   → Página principal del curso                       ║
+  ║    · galeria/     → Carpeta donde colocar las imágenes propias       ║
+  ║                                                                      ║
+  ║  Para añadir imágenes propias:                                       ║
+  ║    1. Crear la carpeta galeria/ junto a este archivo                 ║
+  ║    2. Copiar las imágenes dentro (jpg, png, gif, webp…)              ║
+  ║    3. Editar el array `imagenes` en el bloque <script>               ║
+  ║    4. Eliminar las imágenes de demostración (picsum.photos)          ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Título en la pestaña del navegador -->
+  <title>Galería — CursAula</title>
+
+  <!-- Hoja de estilos compartida con index.html.
+       Los estilos específicos de la galería están en la sección
+       "── GALERÍA ──" de styles.css (clases: .gallery-page,
+       .slideshow-container, .slide-dots, .gallery-controls…) -->
+  <link rel="stylesheet" href="estilos.css"/>
+</head>
+<body>
+
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  SECCIÓN 1: BARRA DE NAVEGACIÓN SUPERIOR (NAVBAR)
+  ──────────────────────────────────────────────────────────────────────
+  Idéntica a la de index.html pero con los enlaces redirigiendo a
+  index.html en lugar de usar loadPage(), ya que esta es una página
+  independiente. El enlace de Galería lleva la clase "active" para
+  indicar que es la sección actual.
+  ══════════════════════════════════════════════════════════════════════
+-->
+<header id="navbar">
+
+  <!-- Logotipo: vuelve a la página principal del curso -->
+  <a class="brand" href="index.html">
+    📘 CursAula
+    <span>Educación</span>
+  </a>
+
+  <!-- Menú de navegación: todos los enlaces apuntan a index.html -->
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="index.html">Contenidos</a>
+    <a href="index.html">Recursos</a>
+    <a href="index.html">Evaluación</a>
+
+    <!-- Enlace activo: esta misma página. Clase "active" para el resaltado visual -->
+    <a href="galeria.html" class="nav-galeria active">🖼 Galería</a>
+
+    <a href="index.html">Contacto</a>
+  </nav>
+
+</header><!-- fin #navbar -->
+
+
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  SECCIÓN 2: GALERÍA / SLIDESHOW
+  ──────────────────────────────────────────────────────────────────────
+  Contenedor principal de la galería. Ocupa el espacio entre el navbar
+  y el footer. Fondo azul oscuro para resaltar las imágenes.
+
+  Estructura interior:
+    · Título y subtítulo informativos
+    · #slideshow         → Contenedor de imágenes (posición relativa)
+    · #slide-counter     → "Imagen X de Y" (visible solo con imágenes)
+    · #slide-dots        → Puntos de navegación (uno por imagen)
+    · .gallery-controls  → Botones Pausar / Anterior / Siguiente
+  ══════════════════════════════════════════════════════════════════════
+-->
+<div class="gallery-page">
+
+  <!-- Título de la sección -->
+  <h2>🖼 Galería del Curso</h2>
+
+  <!-- Subtítulo informativo sobre el funcionamiento del slideshow -->
+  <p class="gallery-subtitle">
+    Las imágenes se muestran en bucle continuo · Cada imagen se muestra 2 segundos
+  </p>
+
+  <!--
+    CONTENEDOR DEL SLIDESHOW (#slideshow)
+    ──────────────────────────────────────
+    Las imágenes se insertan aquí dinámicamente por JavaScript.
+    Cada imagen tiene position:absolute y ocupa todo el contenedor.
+    Solo la imagen con clase "active" tiene opacity:1; las demás, opacity:0.
+    La transición de opacidad (0.7s) está definida en styles.css.
+
+    Si no hay imágenes en el array `imagenes`, se muestra el
+    div #placeholder con un icono y un mensaje de ayuda.
+  -->
+  <div class="slideshow-container" id="slideshow">
+
+    <!-- Mensaje de ayuda mostrado cuando el array `imagenes` está vacío.
+         Se oculta automáticamente en init() si hay imágenes. -->
+    <div class="slide-placeholder" id="placeholder">
+      <!-- Icono SVG de imagen (decorativo) -->
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+      <p>Cargando imágenes de la carpeta <code>galeria/</code>…</p>
+      <p style="font-size:0.78rem; opacity:0.6; margin-top:8px;">
+        Coloca tus imágenes en la carpeta <strong>galeria/</strong><br>
+        y actualiza la lista en este archivo.
+      </p>
+    </div>
+
+  </div><!-- fin #slideshow -->
+
+
+  <!-- Contador "Imagen X de Y" — oculto hasta que init() encuentra imágenes -->
+  <div class="slide-counter" id="slide-counter" style="display:none">
+    Imagen <span id="current-slide">1</span> de <span id="total-slides">0</span>
+  </div>
+
+  <!--
+    PUNTOS DE NAVEGACIÓN (#slide-dots)
+    ─────────────────────────────────────
+    Se crean dinámicamente en init(): un botón circular por imagen.
+    El punto de la imagen activa recibe la clase "active" (azul más grande).
+    Al hacer clic en un punto se salta directamente a esa imagen (goToSlide).
+  -->
+  <div class="slide-dots" id="slide-dots"></div>
+
+  <!--
+    CONTROLES DE LA GALERÍA
+    ─────────────────────────
+    · Pausar/Reanudar → togglePause(): detiene o reactiva el temporizador
+    · Anterior        → prevSlide(): retrocede una imagen y reinicia el timer
+    · Siguiente       → nextSlide(): avanza una imagen y reinicia el timer
+
+    El botón de pausa cambia su texto dinámicamente entre
+    "⏸ Pausar" y "▶ Reanudar" según el estado actual.
+
+    También se puede controlar con teclado:
+      · Flecha izquierda (←) → prevSlide()
+      · Flecha derecha (→)   → nextSlide()
+      · Barra espaciadora    → togglePause()
+    (Ver el listener de 'keydown' al final del script)
+  -->
+  <div class="gallery-controls">
+    <button class="gallery-btn" id="btn-pause" onclick="togglePause()">⏸ Pausar</button>
+    <button class="gallery-btn" onclick="prevSlide()">◀ Anterior</button>
+    <button class="gallery-btn" onclick="nextSlide()">Siguiente ▶</button>
+  </div>
+
+</div><!-- fin .gallery-page -->
+
+
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  SECCIÓN 3: FOOTER
+  ──────────────────────────────────────────────────────────────────────
+  Pie de página con información sobre la galería y enlace de vuelta
+  al curso. Misma estructura que el footer de index.html.
+  ══════════════════════════════════════════════════════════════════════
+-->
+<footer id="footer">
+
+  <!-- Columna 1: Descripción de la plataforma -->
+  <div>
+    <h4>📘 CursAula</h4>
+    <p>Plataforma de aprendizaje diseñada para ofrecer una experiencia educativa completa e interactiva.</p>
+  </div>
+
+  <!-- Columna 2: Información técnica sobre la galería -->
+  <div>
+    <h4>🖼 Galería</h4>
+    <p>
+      Las imágenes se cargan automáticamente desde la carpeta <em>galeria/</em>.<br>
+      Actualiza el listado en el código para añadir o quitar imágenes.
+    </p>
+  </div>
+
+  <!-- Columna 3: Enlace de vuelta al curso -->
+  <div>
+    <h4>🔙 Navegación</h4>
+    <p>
+      <a href="index.html">← Volver al curso</a><br>
+      <a href="index.html">Capítulos y contenidos</a>
+    </p>
+  </div>
+
+  <!-- Fila inferior: copyright a lo ancho de las 3 columnas -->
+  <div class="footer-bottom">
+    © 2025 CursAula — Plataforma Didáctica &nbsp;·&nbsp; Todos los derechos reservados
+  </div>
+
+</footer><!-- fin #footer -->
+
+
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  SECCIÓN 4: JAVASCRIPT DEL SLIDESHOW
+  ──────────────────────────────────────────────────────────────────────
+  Lógica completa del slideshow:
+    · Array `imagenes`    → Lista de rutas/URLs de las imágenes
+    · INTERVALO_MS        → Tiempo de pausa entre imágenes (ms)
+    · imgElements[]       → Referencias a los elementos <img> creados
+    · currentIndex        → Índice de la imagen actualmente visible
+    · timer               → Referencia al setInterval activo
+    · paused              → Estado de pausa (boolean)
+    · init()              → Crea los <img> y los puntos; arranca el timer
+    · goToSlide(index)    → Navega a una imagen concreta
+    · nextSlide()         → Avanza una imagen
+    · prevSlide()         → Retrocede una imagen
+    · startTimer()        → Inicia el temporizador automático
+    · restartTimer()      → Reinicia el temporizador (tras navegación manual)
+    · togglePause()       → Pausa o reanuda el slideshow
+  ══════════════════════════════════════════════════════════════════════
+-->
+<script>
+
+/*
+  ════════════════════════════════════════════════════════════════════
+  ARRAY `imagenes` — LISTA DE IMÁGENES DE LA GALERÍA
+  ════════════════════════════════════════════════════════════════════
+  Aquí se definen todas las imágenes que aparecerán en el slideshow.
+  El orden en el array determina el orden de presentación.
+
+  PARA USAR TUS PROPIAS IMÁGENES:
+    1. Crea la carpeta galeria/ junto a este archivo HTML.
+    2. Copia tus imágenes dentro de esa carpeta.
+    3. Comenta o borra las líneas de demostración (picsum.photos).
+    4. Añade tus imágenes con rutas relativas:
+         'galeria/nombre-del-archivo.jpg'
+
+  Formatos soportados por los navegadores modernos:
+    .jpg  .jpeg  .png  .gif  .webp  .svg  .avif
+
+  Ejemplo con imágenes propias:
+    const imagenes = [
+      'galeria/foto-clase-01.jpg',
+      'galeria/excursion-2024.png',
+      'galeria/proyecto-final.webp',
+    ];
+
+  Si el array está vacío, se muestra el mensaje de ayuda (#placeholder).
+  ════════════════════════════════════════════════════════════════════
+*/
+const imagenes = [
+  /* ── IMÁGENES DE DEMOSTRACIÓN ──────────────────────────────────────
+     Estas imágenes se cargan desde internet (picsum.photos) para que
+     el slideshow funcione sin necesidad de imágenes propias.
+     Sustituirlas por rutas a las imágenes reales del curso.
+     Formato: 'https://picsum.photos/seed/SEMILLA/ANCHO/ALTO'
+     Cambiar la semilla (curso1, curso2…) para obtener imágenes distintas. */
+  'https://picsum.photos/seed/curso1/720/405',
+  'https://picsum.photos/seed/curso2/720/405',
+  'https://picsum.photos/seed/curso3/720/405',
+  'https://picsum.photos/seed/curso4/720/405',
+  'https://picsum.photos/seed/curso5/720/405',
+  'https://picsum.photos/seed/curso6/720/405',
+  'https://picsum.photos/seed/curso7/720/405',
+  'https://picsum.photos/seed/curso8/720/405',
+];
+
+
+/*
+  ════════════════════════════════════════════════════════════════════
+  CONFIGURACIÓN DEL SLIDESHOW
+  ════════════════════════════════════════════════════════════════════
+  INTERVALO_MS → Milisegundos que se muestra cada imagen antes de
+                 pasar automáticamente a la siguiente.
+                 2000 ms = 2 segundos (valor por defecto del enunciado)
+                 Para cambiar la velocidad, editar solo este valor.
+  ════════════════════════════════════════════════════════════════════
+*/
+const INTERVALO_MS = 2000; /* ← CAMBIAR para ajustar la velocidad del slideshow */
+
+
+/*
+  ════════════════════════════════════════════════════════════════════
+  VARIABLES DE ESTADO DEL SLIDESHOW
+  ════════════════════════════════════════════════════════════════════
+*/
+let currentIndex = 0;       /* Índice (0-based) de la imagen visible actualmente */
+let timer        = null;    /* Referencia al setInterval; null si no está activo */
+let paused       = false;   /* true = slideshow pausado, false = en marcha */
+const imgElements = [];     /* Array de referencias a los <img> creados en init() */
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: init()
+  ────────────────────────────────────────────────────────────────────
+  Inicializa el slideshow al cargar la página.
+
+  Acciones:
+    1. Si `imagenes` está vacío → no hace nada (queda el placeholder)
+    2. Oculta el div #placeholder
+    3. Hace visible el contador de imágenes
+    4. Por cada imagen en el array:
+         a. Crea un elemento <img> con src y alt
+         b. La primera imagen recibe clase "active" (visible)
+         c. Añade el <img> al DOM dentro de #slideshow
+         d. Guarda la referencia en imgElements[]
+         e. Crea el punto de navegación correspondiente en #slide-dots
+    5. Inicia el temporizador automático con startTimer()
+
+  Se llama una sola vez al final del script (ver última línea).
+  ────────────────────────────────────────────────────────────────────
+*/
+function init() {
+
+  /* Si no hay imágenes, el placeholder ya está visible; no hacer nada */
+  if (imagenes.length === 0) return;
+
+  /* Referencias a los contenedores del DOM */
+  const container    = document.getElementById('slideshow');
+  const dotsContainer = document.getElementById('slide-dots');
+  const placeholder  = document.getElementById('placeholder');
+
+  /* Ocultar el mensaje de ayuda */
+  placeholder.style.display = 'none';
+
+  /* Mostrar el contador "Imagen X de Y" y rellenar el total */
+  document.getElementById('slide-counter').style.display = 'block';
+  document.getElementById('total-slides').textContent = imagenes.length;
+
+  /* Crear un <img> y un punto de navegación por cada imagen del array */
+  imagenes.forEach((src, i) => {
+
+    /* ── Crear elemento de imagen ── */
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = 'Imagen ' + (i + 1) + ' de la galería del curso';
+
+    /* La primera imagen empieza visible (clase "active" → opacity:1 en CSS) */
+    if (i === 0) img.classList.add('active');
+
+    /* Insertar en el DOM y guardar referencia en el array */
+    container.appendChild(img);
+    imgElements.push(img);
+
+    /* ── Crear punto de navegación ── */
+    const dot = document.createElement('button');
+    dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Ir a imagen ' + (i + 1));
+    /* Al hacer clic en el punto, ir directamente a esa imagen */
+    dot.onclick = () => goToSlide(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  /* Arrancar el bucle automático */
+  startTimer();
+
+} /* fin init() */
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: goToSlide(index)
+  ────────────────────────────────────────────────────────────────────
+  Navega a la imagen con índice `index`. Gestiona el ciclo infinito
+  mediante el operador módulo (%).
+
+  Acciones:
+    1. Quita la clase "active" de la imagen y el punto actuales
+    2. Calcula el nuevo índice con módulo (para el bucle infinito)
+    3. Añade la clase "active" a la nueva imagen y su punto
+    4. Actualiza el número en el contador de imágenes
+
+  Parámetros:
+    · index (number) → Índice de destino (puede ser negativo o > length)
+  ────────────────────────────────────────────────────────────────────
+*/
+function goToSlide(index) {
+  /* Obtener referencias a los dots del DOM */
+  const dots = document.querySelectorAll('.slide-dot');
+
+  /* 1. Desactivar imagen y punto actuales */
+  imgElements[currentIndex].classList.remove('active');
+  dots[currentIndex].classList.remove('active');
+
+  /* 2. Calcular el nuevo índice con bucle infinito */
+  /* El módulo con suma de length evita índices negativos */
+  currentIndex = (index + imagenes.length) % imagenes.length;
+
+  /* 3. Activar la nueva imagen y su punto */
+  imgElements[currentIndex].classList.add('active');
+  dots[currentIndex].classList.add('active');
+
+  /* 4. Actualizar el contador textual */
+  document.getElementById('current-slide').textContent = currentIndex + 1;
+
+} /* fin goToSlide() */
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: nextSlide()
+  ────────────────────────────────────────────────────────────────────
+  Avanza a la siguiente imagen. Si estamos en la última, pasa a la
+  primera (bucle infinito).
+
+  Al navegar manualmente, reinicia el temporizador para que el
+  contador de 2 segundos empiece de cero desde la nueva imagen.
+  (Esto evita que la imagen cambie inmediatamente si el usuario
+  acaba de hacer clic en "Siguiente".)
+
+  Activado por: botón "Siguiente ▶" y tecla →
+  ────────────────────────────────────────────────────────────────────
+*/
+function nextSlide() {
+  goToSlide(currentIndex + 1);
+  /* Reiniciar el timer solo si el slideshow no está pausado */
+  if (!paused) restartTimer();
+}
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: prevSlide()
+  ────────────────────────────────────────────────────────────────────
+  Retrocede a la imagen anterior. Si estamos en la primera, pasa a
+  la última (bucle infinito).
+
+  El módulo con la suma de imagenes.length en goToSlide() garantiza
+  que (0 - 1 + length) % length = (length - 1), que es el último índice.
+
+  Activado por: botón "◀ Anterior" y tecla ←
+  ────────────────────────────────────────────────────────────────────
+*/
+function prevSlide() {
+  goToSlide(currentIndex - 1);
+  if (!paused) restartTimer();
+}
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: startTimer()
+  ────────────────────────────────────────────────────────────────────
+  Inicia el temporizador automático del slideshow usando setInterval.
+  Cada vez que se cumple INTERVALO_MS, avanza a la siguiente imagen.
+  Guarda la referencia en `timer` para poder cancelarla después.
+  ────────────────────────────────────────────────────────────────────
+*/
+function startTimer() {
+  timer = setInterval(() => {
+    goToSlide(currentIndex + 1); /* avanzar una imagen */
+  }, INTERVALO_MS);
+}
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: restartTimer()
+  ────────────────────────────────────────────────────────────────────
+  Reinicia el temporizador: lo cancela y lo vuelve a iniciar.
+  Se llama tras la navegación manual para que el nuevo intervalo
+  empiece a contar desde cero en la imagen recién mostrada.
+  ────────────────────────────────────────────────────────────────────
+*/
+function restartTimer() {
+  clearInterval(timer); /* cancelar el setInterval anterior */
+  startTimer();         /* iniciar uno nuevo desde cero */
+}
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: togglePause()
+  ────────────────────────────────────────────────────────────────────
+  Alterna el estado de pausa del slideshow.
+
+  Si está en marcha (paused === false):
+    · Cancela el temporizador con clearInterval(timer)
+    · Cambia el texto del botón a "▶ Reanudar"
+    · Pone paused = true
+
+  Si está pausado (paused === true):
+    · Inicia un nuevo temporizador con startTimer()
+    · Cambia el texto del botón a "⏸ Pausar"
+    · Pone paused = false
+
+  Activado por: botón "⏸ Pausar" / "▶ Reanudar" y barra espaciadora
+  ────────────────────────────────────────────────────────────────────
+*/
+function togglePause() {
+  const btn = document.getElementById('btn-pause');
+
+  if (paused) {
+    /* Reanudar: iniciar temporizador */
+    startTimer();
+    btn.textContent = '⏸ Pausar';
+    paused = false;
+  } else {
+    /* Pausar: detener temporizador */
+    clearInterval(timer);
+    btn.textContent = '▶ Reanudar';
+    paused = true;
+  }
+}
+
+
+/*
+  ════════════════════════════════════════════════════════════════════
+  LISTENER: CONTROL POR TECLADO
+  ════════════════════════════════════════════════════════════════════
+  Permite controlar el slideshow sin usar el ratón:
+    · Flecha izquierda (ArrowLeft)  → imagen anterior
+    · Flecha derecha  (ArrowRight)  → imagen siguiente
+    · Barra espaciadora (Space)     → pausar / reanudar
+  La llamada a e.preventDefault() en Space evita que la página
+  haga scroll hacia abajo (comportamiento por defecto del navegador).
+  ════════════════════════════════════════════════════════════════════
+*/
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextSlide();              /* → siguiente */
+  if (e.key === 'ArrowLeft')  prevSlide();              /* ← anterior  */
+  if (e.key === ' ')          { e.preventDefault(); togglePause(); } /* espacio = pausa */
+});
+
+
+/*
+  ════════════════════════════════════════════════════════════════════
+  INICIALIZACIÓN — Llamada al cargar la página
+  ════════════════════════════════════════════════════════════════════
+  init() se llama una sola vez al final del script.
+  Lee el array `imagenes`, construye el DOM del slideshow y arranca
+  el temporizador automático.
+  ════════════════════════════════════════════════════════════════════
+*/
+init();
+
+</script>
+</body>
+</html>

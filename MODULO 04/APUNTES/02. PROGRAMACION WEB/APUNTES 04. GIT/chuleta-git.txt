@@ -1,0 +1,74 @@
+1) Al directorio del proyecto d:\proyectos\p1
+2) git init
+3) git config --global user.name "PEPE"
+4) git config --global user.email "PEPE@out.com"
+--------------------------------------------------
+5) git status    (COMO ESTA TODO)
+6) git add *.html    (EMBARCAR)
+7) git commit -m "MENSAJE CORTO"     (CREA UNA NUEVA VER)
+
+-------------------------------------------------------------
+git log         --> LISTADO DE COMMITS
+git log --oneline                     .. listado resumido commits
+git checkout  ID_DE_COMMIT   (recupera un commit a zona de trabajo)
+
+----------------------------------------------------------------
+RAMAS
+git branch nombre_rama          .. crea una rama
+git checkout  nomrama           ..  salta a la rama
+git checkout  master            ..salta a la rama principal master
+
+
+
+Guía de Supervivencia: Git & GitHub
+
+🔧 1. Configuración Inicial (Solo se hace una vez)
+
+Antes de empezar a jugar, Git necesita saber quién eres.
+Comando	Qué hace
+git config --global user.name "Tu Nombre"	Te pone nombre de autor.
+git config --global user.email "tu@email.com"	Te pone correo de autor.
+git --version	Comprueba si Git está vivo en tu PC.
+
+
+📝 2. El Ciclo de Trabajo Diario
+
+Estos son los comandos que usarás el 90% del tiempo.
+Comando						Qué hace							Tip de supervivencia
+git status					Te dice qué archivos has cambiado.	¡Úsalo antes de cada paso! Es tu brújula.
+git add .					Prepara todos los archivos para la foto.	El . significa "todo lo que haya aquí".
+git commit -m "mensaje"		Hace la "foto" oficial del código.	Escribe mensajes claros, no pongas "asdfgh".
+git push origin rama		Sube tus fotos a GitHub.	Es como darle a "Enviar" en un correo.
+
+
+
+🌿 3. Ramas (Branches):
+Fundamental para no romper el trabajo de los demás.
+
+Crear y saltar a una rama: git checkout -b nombre-de-la-rama
+
+Listar ramas: git branch
+
+Volver a la principal: git checkout main   ó    git checkout master
+
+
+4. El Botón de Pánico
+Si algo sale mal, no borres la carpeta y empieces de cero. Prueba esto:
+
+"Me he equivocado en el último mensaje de commit"
+git commit --amend -m "Nuevo mensaje correcto"
+
+"He borrado algo sin querer y quiero volver al último commit"
+git restore nombre-del-archivo
+
+"Quiero ver qué demonios he hecho hoy"
+git log --oneline (Muestra un historial resumido).
+
+5. Conexión con GitHub
+Comando							Qué hace
+git clone URL					Descarga un proyecto por primera vez.
+git remote -v					Te dice a qué repositorio de Internet estás conectado.
+git pull origin main			Trae los cambios nuevos que tus compañeros hayan subido.
+
+
+

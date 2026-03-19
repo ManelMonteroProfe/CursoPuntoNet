@@ -1,0 +1,9 @@
+D:\proyectos\M5errores\M5errores\obj\Debug\M5errores.csproj.AssemblyReference.cache
+D:\proyectos\M5errores\M5errores\obj\Debug\M5errores.Properties.Resources.resources
+D:\proyectos\M5errores\M5errores\obj\Debug\M5errores.csproj.GenerateResource.cache
+D:\proyectos\M5errores\M5errores\obj\Debug\M5errores.csproj.CoreCompileInputs.cache
+D:\proyectos\M5errores\M5errores\bin\Debug\M5errores.exe.config
+D:\proyectos\M5errores\M5errores\bin\Debug\M5errores.exe
+D:\proyectos\M5errores\M5errores\bin\Debug\M5errores.pdb
+D:\proyectos\M5errores\M5errores\obj\Debug\M5errores.exe
+D:\proyectos\M5errores\M5errores\obj\Debug\M5errores.pdb

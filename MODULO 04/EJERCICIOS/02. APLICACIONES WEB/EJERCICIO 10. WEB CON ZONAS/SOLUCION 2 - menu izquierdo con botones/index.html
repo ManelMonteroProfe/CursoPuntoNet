@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Layout con menú lateral</title>
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+
+  <header class="header">
+    <nav class="nav">
+      <a href="#">Inicio</a>
+      <a href="#">Servicios</a>
+      <a href="#">Blog</a>
+      <a href="#">Contacto</a>
+    </nav>
+  </header>
+
+  <main class="contenedor">
+    <!-- IZQUIERDA -->
+    <section class="izquierda">
+	  <div class="logo">
+			<img src="robot.JPG" alt="Logo Robot" class="logo-img">
+				<div class="logo-textos">
+					<div class="logo-titulo">MiWeb</div>
+						<div class="logo-sub">Demo HTML/CSS</div>
+				</div>
+	  </div>
+	  <h2>Menú</h2>
+
+      <div class="menu-lateral">
+        <button onclick="cargarPagina('pagina1.html')">Página 1</button>
+        <button onclick="cargarPagina('pagina2.html')">Página 2</button>
+        <button onclick="cargarPagina('pagina3.html')">Página 3</button>
+        <button onclick="cargarPagina('pagina4.html')">Página 4</button>
+      </div>
+    </section>
+
+    <!-- CENTRO -->
+    <article class="centro">
+      <h2>Contenido</h2>
+
+      <!-- Aquí se cargan las páginas -->
+      <iframe id="visor" src="pagina1.html" title="Contenido central"></iframe>
+    </article>
+
+    <!-- DERECHA -->
+    <aside class="derecha">
+      <h2>Aside</h2>
+      <p>Zona derecha</p>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 - Mi web</p>
+  </footer>
+
+  <script>
+    function cargarPagina(ruta) {
+      document.getElementById("visor").src = ruta;
+    }
+  </script>
+
+</body>
+</html>

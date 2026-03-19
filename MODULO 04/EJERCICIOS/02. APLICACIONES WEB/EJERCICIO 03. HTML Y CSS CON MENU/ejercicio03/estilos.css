@@ -1,0 +1,56 @@
+/* HOJAS DE ESTILOS */
+/*Aplica Fondo azul para toda la página. Se aplica al body*/
+body {
+  background-color: lightblue;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+h1 {
+	color: red;
+	font-family: Arial, sans-serif;
+	font-size: 30px;
+	font-weight: bold;
+	text-align: center;
+	text-transform: uppercase;
+}
+h2{
+	color: darkblue;
+}
+
+/* Caja del menú */
+.menu {
+  background: #e6f2ff;          /* fondo suave */
+  border: 2px solid #99c2ff;     /* borde */
+  padding: 12px;
+  display: flex;                /* coloca enlaces en fila */
+  gap: 10px;                    /* separación entre "botones" */
+  flex-wrap: wrap;              /* si no cabe, baja a otra línea */
+  border-radius: 10px;          /* esquinas redondeadas */
+  width: fit-content;           /* se ajusta al contenido */
+  margin: 20px;
+}
+
+/* Enlaces con forma de botón */
+.menu a {
+  display: inline-block;
+  padding: 10px 14px;
+  border: 2px solid #2f6fdd;
+  background: #ffffff;
+  color: #2f6fdd;
+  text-decoration: none;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  font-weight: 600;
+}
+
+/* Efecto al pasar el ratón */
+.menu a:hover {
+  background: #2f6fdd;
+  color: white;
+}
+
+/* Efecto cuando haces clic */
+.menu a:active {
+  transform: scale(0.98);
+}

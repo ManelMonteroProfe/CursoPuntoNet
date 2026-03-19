@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║  CURSAULA — Plataforma Didáctica creada para Curso Web               ║
+  ║  Archivo: index.html                                                 ║
+  ║  Descripción: Página principal del curso. Contiene el layout de      ║
+  ║               tres columnas (sidebar izquierdo + zona central +      ║
+  ║               sidebar derecho), la barra de navegación superior y    ║
+  ║               el footer inferior.                                    ║
+  ║                                                                      ║
+  ║  Archivos relacionados:                                              ║
+  ║    · styles.css    → Todos los estilos visuales                      ║
+  ║    · galeria.html  → Página independiente de la galería              ║
+  ║                                                                      ║
+  ║  Cómo personalizar este archivo:                                     ║
+  ║    1. Menú superior       → Sección <header id="navbar">             ║
+  ║    2. Capítulos y títulos → Sección <aside id="sidebar-left">        ║
+  ║    3. Textos de contenido → Objeto `pages` dentro de <script>        ║
+  ║    4. Índice de búsqueda  → Array `searchIndex` dentro de <script>   ║
+  ║    5. Datos del curso     → Bloque "Información" en sidebar-right ║
+  ║    6. Texto del footer    → Sección <footer id="footer">             ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Título que aparece en la pestaña del navegador -->
+  <title>Curso Didáctico — Plataforma de Aprendizaje</title>
+
+  <!-- Hoja de estilos principal. Contiene toda la paleta de colores pastel azul,
+       tipografía, layout de tres columnas y componentes visuales. -->
+  <link rel="stylesheet" href="estilos.css"/>
+</head>
+<body>
+
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  SECCIÓN 1: BARRA DE NAVEGACIÓN SUPERIOR (NAVBAR)
+  ──────────────────────────────────────────────────────────────────────
+  Contiene:
+    · El logotipo / nombre del curso (izquierda)
+    · Los enlaces del menú principal (derecha)
+
+  Cómo añadir una nueva opción al menú:
+    <a href="#" onclick="loadPage('MI_CLAVE'); setActive(this)">Mi Sección</a>
+    y añadir la clave 'MI_CLAVE' al objeto `pages` en el bloque <script>.
+
+  El enlace de Galería es especial: abre galeria.html como página completa,
+  no carga contenido en la zona central.
+  ══════════════════════════════════════════════════════════════════════
+-->
+<header id="navbar">
+
+  <!-- Logotipo: al hacer clic vuelve a la página de inicio -->
+  <a class="brand" href="#" onclick="loadPage('home'); return false;">
+    📘 CursAula
+    <span>Educación</span>  <!-- Etiqueta pequeña junto al nombre -->
+  </a>
+
+  <!-- Menú de navegación principal -->
+  <nav>
+    <!-- Cada enlace llama a loadPage('clave') para cargar contenido en la zona central.
+         La clase "active" se gestiona automáticamente con setActive(this). -->
+    <a href="#" onclick="loadPage('home'); setActive(this)" class="active">Inicio</a>
+    <a href="#" onclick="loadPage('contenidos'); setActive(this)">Contenidos</a>
+    <a href="#" onclick="loadPage('recursos'); setActive(this)">Recursos</a>
+    <a href="#" onclick="loadPage('evaluacion'); setActive(this)">Evaluación</a>
+
+    <!-- Enlace a galería: abre una página separada, no usa loadPage() -->
+    <!-- La clase "nav-galeria" le da un estilo diferenciado (botón azul) -->
+    <a href="galeria.html" class="nav-galeria">🖼 Galería</a>
+
+    <a href="#" onclick="loadPage('contacto'); setActive(this)">Contacto</a>
+  </nav>
+
+</header><!-- fin #navbar -->
+
+
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  SECCIÓN 2: LAYOUT PRINCIPAL — TRES COLUMNAS
+  ──────────────────────────────────────────────────────────────────────
+  El div #main-layout usa CSS Grid con tres columnas:
+    · Columna 1 (240px)    → #sidebar-left  (índice tipo libro)
+    · Columna 2 (flexible) → #content-area  (zona central de contenido)
+    · Columna 3 (230px)    → #sidebar-right (buscador y widgets)
+
+  En pantallas pequeñas (<900px) el sidebar-right se oculta.
+  En pantallas muy pequeñas (<600px) también el sidebar-left.
+  ══════════════════════════════════════════════════════════════════════
+-->
+<div id="main-layout">
+
+
+  <!--
+    ────────────────────────────────────────────────────────────────────
+    COLUMNA 1: SIDEBAR IZQUIERDO — ÍNDICE DEL CURSO (tipo libro)
+    ────────────────────────────────────────────────────────────────────
+    Muestra los capítulos y subcapítulos como un árbol expandible.
+    Cada capítulo tiene la clase "chapter-item" con un id único (ch1, ch2…).
+    Al hacer clic en la cabecera del capítulo, toggleChapter() lo abre/cierra.
+    Al hacer clic en un subcapítulo, loadContent('X.X') carga su contenido.
+
+    CÓMO AÑADIR UN NUEVO CAPÍTULO:
+      1. Copia el bloque <li class="chapter-item" id="chN"> de uno existente.
+      2. Cambia el id (ch5, ch6…), el número y el nombre.
+      3. Actualiza los subcapítulos con sus claves (5.1, 5.2…).
+      4. Añade las claves correspondientes al objeto `pages` en el <script>.
+      5. Añade las claves al array `searchIndex` en el <script>.
+      6. Actualiza el `chapterMap` en la función loadContent() del <script>.
+    ────────────────────────────────────────────────────────────────────
+  -->
+  <aside id="sidebar-left">
+
+    <!-- Título de la columna con icono SVG de libro -->
+    <div class="sidebar-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      Índice del Curso
+    </div>
+
+    <!-- Lista de capítulos -->
+    <!-- Clase CSS clave: "tree-list" da el estilo de árbol -->
+    <ul class="tree-list">
+
+      <!--
+        ── CAPÍTULO 1 ──────────────────────────────────────────────────
+        · id="ch1"  → identificador usado por toggleChapter() y openChapter()
+        · La clase "chapter-item" es necesaria para el estilo y la lógica JS
+        · La clase "open" se añade/quita dinámicamente para expandir/colapsar
+      -->
+      <li class="chapter-item" id="ch1">
+
+        <!-- Cabecera clicable del capítulo: llama a toggleChapter con su propio id -->
+        <div class="chapter-header" onclick="toggleChapter('ch1')">
+          <span class="ch-label">
+            <span class="num">1</span> Introducción  <!-- Número en círculo + título -->
+          </span>
+          <span class="arrow">▶</span>  <!-- Flecha animada con CSS cuando está abierto -->
+        </div>
+
+        <!-- Subcapítulos: ocultos por defecto, visibles cuando el padre tiene clase "open" -->
+        <!-- La transición suave está controlada por max-height en styles.css -->
+        <ul class="subcapitulos">
+          <!-- Cada subcapítulo llama a loadContent() con su clave única ('1.1', '1.2'…) -->
+          <li><a href="#" onclick="loadContent('1.1'); return false;">1.1 Presentación del curso</a></li>
+          <li><a href="#" onclick="loadContent('1.2'); return false;">1.2 Objetivos y metodología</a></li>
+        </ul>
+      </li><!-- fin ch1 -->
+
+
+      <!--
+        ── CAPÍTULO 2 ──────────────────────────────────────────────────
+        Mismo patrón que el Capítulo 1. Cambiar id, número, título y claves.
+      -->
+      <li class="chapter-item" id="ch2">
+        <div class="chapter-header" onclick="toggleChapter('ch2')">
+          <span class="ch-label">
+            <span class="num">2</span> Fundamentos
+          </span>
+          <span class="arrow">▶</span>
+        </div>
+        <ul class="subcapitulos">
+          <li><a href="#" onclick="loadContent('2.1'); return false;">2.1 Conceptos básicos</a></li>
+          <li><a href="#" onclick="loadContent('2.2'); return false;">2.2 Principios esenciales</a></li>
+        </ul>
+      </li><!-- fin ch2 -->
+
+
+      <!-- ── CAPÍTULO 3 ─────────────────────────────────────────────── -->
+      <li class="chapter-item" id="ch3">
+        <div class="chapter-header" onclick="toggleChapter('ch3')">
+          <span class="ch-label">
+            <span class="num">3</span> Desarrollo
+          </span>
+          <span class="arrow">▶</span>
+        </div>
+        <ul class="subcapitulos">
+          <li><a href="#" onclick="loadContent('3.1'); return false;">3.1 Teoría aplicada</a></li>
+          <li><a href="#" onclick="loadContent('3.2'); return false;">3.2 Casos prácticos</a></li>
+        </ul>
+      </li><!-- fin ch3 -->
+
+
+      <!-- ── CAPÍTULO 4 ─────────────────────────────────────────────── -->
+      <li class="chapter-item" id="ch4">
+        <div class="chapter-header" onclick="toggleChapter('ch4')">
+          <span class="ch-label">
+            <span class="num">4</span> Evaluación Final
+          </span>
+          <span class="arrow">▶</span>
+        </div>
+        <ul class="subcapitulos">
+          <li><a href="#" onclick="loadContent('4.1'); return false;">4.1 Repaso general</a></li>
+          <li><a href="#" onclick="loadContent('4.2'); return false;">4.2 Actividades finales</a></li>
+        </ul>
+      </li><!-- fin ch4 -->
+
+    </ul><!-- fin .tree-list -->
+
+  </aside><!-- fin #sidebar-left -->
+
+
+  <!--
+    ────────────────────────────────────────────────────────────────────
+    COLUMNA 2: ZONA CENTRAL DE CONTENIDO
+    ────────────────────────────────────────────────────────────────────
+    Esta columna muestra el contenido HTML correspondiente al capítulo
+    o sección que el usuario haya seleccionado.
+
+    El div #page-content es el contenedor dinámico: su innerHTML se
+    reemplaza completamente cada vez que el usuario navega a una nueva
+    sección. El contenido proviene del objeto `pages` definido en JS.
+
+    Al cargarse la página, se muestra automáticamente la página 'home'
+    (ver la última línea del bloque <script>: loadPage('home')).
+    ────────────────────────────────────────────────────────────────────
+  -->
+  <main id="content-area">
+
+    <!-- Contenedor dinámico: su contenido se sustituye por JavaScript -->
+    <!-- La animación fadeIn (definida en styles.css) se aplica en cada carga -->
+    <div class="content-page" id="page-content">
+      <!-- El contenido inicial (página 'home') se inyecta al cargar el script -->
+    </div>
+
+  </main><!-- fin #content-area -->
+
+
+  <!--
+    ────────────────────────────────────────────────────────────────────
+    COLUMNA 3: SIDEBAR DERECHO — BUSCADOR Y WIDGETS
+    ────────────────────────────────────────────────────────────────────
+    Contiene cuatro bloques:
+      1. Buscador: caja de texto + botón → ejecuta doSearch()
+      2. Barra de progreso: se actualiza con markVisited() cada vez
+         que el usuario abre un subcapítulo
+      3. Accesos rápidos: atajos directos a secciones clave
+      4. Información del curso: datos generales editables
+
+    Este sidebar se oculta en pantallas menores de 900px (ver styles.css).
+    ────────────────────────────────────────────────────────────────────
+  -->
+  <aside id="sidebar-right">
+
+    <!-- Título del bloque buscador con icono SVG de lupa -->
+    <div class="search-title">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      Buscador
+    </div>
+
+    <!--
+      BUSCADOR
+      · El input escucha la tecla Enter para lanzar la búsqueda sin clic
+      · El botón llama directamente a doSearch()
+      · Los resultados se muestran en #search-results (oculto por defecto)
+      · La búsqueda funciona sobre el array searchIndex definido en JS
+        (busca coincidencias en el título y en las palabras clave)
+    -->
+    <div class="search-box">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Buscar en el curso…"
+        onkeydown="if(event.key==='Enter') doSearch()"
+      />
+      <button onclick="doSearch()">🔍 Buscar</button>
+    </div>
+
+    <!-- Área de resultados de búsqueda: oculta hasta que se realiza una búsqueda.
+         La clase "visible" se añade con JS para mostrarla (ver doSearch()). -->
+    <div class="search-results" id="search-results"></div>
+
+
+    <!--
+      WIDGET: BARRA DE PROGRESO DEL CURSO
+      · #progress-bar: div cuyo width% se actualiza con markVisited()
+      · #progress-text: texto "X / 8 secciones" actualizado en tiempo real
+      · El total es 8 (número de subcapítulos). Cambiarlo si se añaden más.
+    -->
+    <div class="sidebar-section">
+      <h4>📊 Mi progreso</h4>
+      <p style="font-size:0.8rem; color:var(--texto-suave); margin-bottom:8px;">Capítulos visitados</p>
+      <div class="progress-bar-wrap">
+        <!-- width se actualiza dinámicamente por JS: 0% → 100% -->
+        <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
+      </div>
+      <p style="font-size:0.75rem; color:var(--texto-claro); margin-top:5px;" id="progress-text">
+        0 / 8 secciones
+      </p>
+    </div>
+
+
+    <!--
+      WIDGET: ACCESOS RÁPIDOS
+      · Atajos directos a las secciones más importantes del curso.
+      · Editar los onclick para apuntar a otras secciones si se desea.
+      · Último enlace lleva a galeria.html (página separada).
+    -->
+    <div class="sidebar-section">
+      <h4>⚡ Accesos rápidos</h4>
+      <ul>
+        <li><a href="#" onclick="loadContent('1.1'); return false;">▸ Presentación</a></li>
+        <li><a href="#" onclick="loadContent('2.1'); return false;">▸ Conceptos básicos</a></li>
+        <li><a href="#" onclick="loadContent('3.2'); return false;">▸ Casos prácticos</a></li>
+        <li><a href="#" onclick="loadContent('4.1'); return false;">▸ Repaso final</a></li>
+        <li><a href="galeria.html">▸ Ver galería</a></li>
+      </ul>
+    </div>
+
+
+    <!--
+      WIDGET: INFORMACIÓN DEL CURSO
+      · Datos generales del curso. Editar directamente el texto.
+      · No tiene lógica JS asociada, es contenido estático.
+    -->
+    <div class="sidebar-section">
+      <h4>📅 Información</h4>
+      <ul>
+        <li><span style="color:var(--texto-claro)">Duración:</span> 40 horas</li>
+        <li><span style="color:var(--texto-claro)">Nivel:</span> Intermedio</li>
+        <li><span style="color:var(--texto-claro)">Idioma:</span> Español</li>
+        <li><span style="color:var(--texto-claro)">Módulos:</span> 4 capítulos</li>
+      </ul>
+    </div>
+
+  </aside><!-- fin #sidebar-right -->
+
+</div><!-- fin #main-layout -->
+
+
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  SECCIÓN 3: FOOTER
+  ──────────────────────────────────────────────────────────────────────
+  Pie de página con tres columnas (CSS Grid 1fr 1fr 1fr) y una fila
+  inferior de copyright que ocupa las tres columnas.
+
+  CÓMO PERSONALIZAR:
+    · Columna 1: descripción del curso/plataforma
+    · Columna 2: enlaces internos a secciones principales
+    · Columna 3: datos de contacto del profesorado
+    · Fila inferior (.footer-bottom): texto de copyright
+  ══════════════════════════════════════════════════════════════════════
+-->
+<footer id="footer">
+
+  <!-- Columna 1: Descripción de la plataforma -->
+  <div>
+    <h4>📘 CursAula</h4>
+    <p>Plataforma de aprendizaje diseñada para ofrecer una experiencia educativa completa e interactiva.</p>
+  </div>
+
+  <!-- Columna 2: Mapa de secciones con enlaces internos -->
+  <div>
+    <h4>🗂 Secciones</h4>
+    <p>
+      <a href="#" onclick="loadPage('home')">Inicio</a><br>
+      <a href="#" onclick="loadPage('recursos')">Recursos didácticos</a><br>
+      <a href="#" onclick="loadPage('evaluacion')">Evaluación</a><br>
+      <a href="galeria.html">Galería de imágenes</a>
+    </p>
+  </div>
+
+  <!-- Columna 3: Información de contacto del profesor -->
+  <!-- EDITAR: actualizar email, horarios y departamento -->
+  <div>
+    <h4>📬 Contacto</h4>
+    <p>
+      Profesor/a del curso<br>
+      <a href="mailto:curso@ejemplo.es">manel.montero@gmail.com</a><br>
+      Consultor y Formador
+    </p>
+  </div>
+
+  <!-- Fila inferior: abarca las 3 columnas (grid-column: 1 / -1 en CSS) -->
+  <div class="footer-bottom">
+    © 2026 CursAula — Plataforma Didáctica &nbsp;·&nbsp; Manel Montero Profe
+  </div>
+
+</footer><!-- fin #footer -->
+
+
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  SECCIÓN 4: JAVASCRIPT
+  ──────────────────────────────────────────────────────────────────────
+  Todo el comportamiento dinámico de la página está aquí.
+  No se usa ninguna librería externa; es JavaScript puro (vanilla JS).
+
+  Estructura de esta sección:
+    · Objeto `pages`       → Contenidos HTML de cada sección/subcapítulo
+    · Array `searchIndex`  → Datos para el buscador
+    · Variable `visited`   → Registro de secciones visitadas (progreso)
+    · markVisited()        → Actualiza la barra de progreso
+    · loadPage()           → Carga una página del menú superior
+    · loadContent()        → Carga un subcapítulo del índice lateral
+    · toggleChapter()      → Abre/cierra un capítulo en el sidebar
+    · openChapter()        → Fuerza la apertura de un capítulo
+    · setActive()          → Gestiona el enlace activo en el navbar
+    · doSearch()           → Realiza la búsqueda en el índice
+  ══════════════════════════════════════════════════════════════════════
+-->
+<script>
+
+/*
+  ════════════════════════════════════════════════════════════════════
+  OBJETO `pages` — BASE DE CONTENIDOS
+  ════════════════════════════════════════════════════════════════════
+  Cada clave de este objeto corresponde a una sección navegable.
+  El valor es una cadena HTML que se inyecta en #page-content.
+
+  CLAVES DEL MENÚ SUPERIOR:
+    'home'       → Página de bienvenida (cargada al inicio)
+    'contenidos' → Vista general de todos los capítulos
+    'recursos'   → Materiales de apoyo descargables y enlaces
+    'evaluacion' → Criterios y calendario de evaluación
+    'contacto'   → Datos de contacto del profesorado
+
+  CLAVES DE SUBCAPÍTULOS:
+    '1.1' … '4.2' → Contenido de cada subcapítulo
+
+  CLASES HTML DISPONIBLES PARA EL CONTENIDO:
+    .page-header  → Cabecera con breadcrumb, h1 y subtítulo
+    .info-box     → Caja de nota/aviso con borde azul lateral
+    .card-grid    → Cuadrícula de tarjetas (para resúmenes visuales)
+    .card-item    → Tarjeta individual dentro de .card-grid
+    .badge        → Etiqueta pequeña tipo "NUEVO"
+    .tag          → Etiqueta con borde tipo "PDF"
+    h2, h3, p     → Subtítulos y párrafos con estilos aplicados
+    ul, ol        → Listas con estilos aplicados
+  ════════════════════════════════════════════════════════════════════
+*/
+const pages = {
+
+  /* ── INICIO ───────────────────────────────────────────────────────
+     Página de bienvenida mostrada al abrir index.html.
+     Incluye tarjetas de acceso rápido a los cuatro capítulos.
+  ────────────────────────────────────────────────────────────────── */
+  home: `
+    <div class="page-header">
+      <div class="breadcrumb">Bienvenida</div>
+      <h1>Bienvenido/a al Curso</h1>
+      <div class="subtitle">Tu espacio de aprendizaje interactivo</div>
+    </div>
+    <p>Este curso ha sido diseñado para guiarte de forma progresiva y amena a través de todos los contenidos de la asignatura. Encontrarás explicaciones claras, actividades prácticas y recursos de apoyo en cada capítulo.</p>
+    <div class="info-box"><strong>💡 ¿Cómo navegar?</strong>Usa el índice de la izquierda para moverte por los capítulos y subcapítulos. El buscador de la derecha te ayudará a encontrar cualquier concepto rápidamente.</div>
+    <h2>Estructura del curso</h2>
+    <div class="card-grid">
+      <div class="card-item" onclick="loadContent('1.1')"><span class="icon">📖</span><strong>Cap. 1</strong><br>Introducción</div>
+      <div class="card-item" onclick="loadContent('2.1')"><span class="icon">🔬</span><strong>Cap. 2</strong><br>Fundamentos</div>
+      <div class="card-item" onclick="loadContent('3.1')"><span class="icon">⚙</span><strong>Cap. 3</strong><br>Desarrollo</div>
+      <div class="card-item" onclick="loadContent('4.1')"><span class="icon">🎯</span><strong>Cap. 4</strong><br>Evaluación</div>
+    </div>
+    <h2>Novedades</h2>
+    <p><span class="badge">NUEVO</span> Se han añadido casos prácticos en el Capítulo 3.</p>
+    <p><span class="badge">PRÓXIMO</span> Entrega de actividades finales: fecha por confirmar.</p>
+  `,
+
+  /* ── CONTENIDOS ───────────────────────────────────────────────────
+     Vista general del temario completo. Útil como mapa del curso.
+  ────────────────────────────────────────────────────────────────── */
+  contenidos: `
+    <div class="page-header">
+      <div class="breadcrumb">Menú → Contenidos</div>
+      <h1>Contenidos del Curso</h1>
+      <div class="subtitle">Resumen completo de todos los capítulos</div>
+    </div>
+    <p>A continuación encontrarás el mapa completo de contenidos. Haz clic en cualquier capítulo del índice lateral para acceder a los materiales.</p>
+    <h2>Capítulo 1 — Introducción</h2>
+    <ul><li>1.1 Presentación del curso y del profesor</li><li>1.2 Objetivos de aprendizaje y metodología de trabajo</li></ul>
+    <h2>Capítulo 2 — Fundamentos</h2>
+    <ul><li>2.1 Conceptos básicos de la materia</li><li>2.2 Principios esenciales y marco teórico</li></ul>
+    <h2>Capítulo 3 — Desarrollo</h2>
+    <ul><li>3.1 Aplicación de la teoría en contextos reales</li><li>3.2 Casos prácticos resueltos y comentados</li></ul>
+    <h2>Capítulo 4 — Evaluación Final</h2>
+    <ul><li>4.1 Repaso integral de todos los contenidos</li><li>4.2 Actividades finales y criterios de evaluación</li></ul>
+  `,
+
+  /* ── RECURSOS ─────────────────────────────────────────────────────
+     Materiales de apoyo. Editar listas para añadir recursos reales.
+  ────────────────────────────────────────────────────────────────── */
+  recursos: `
+    <div class="page-header">
+      <div class="breadcrumb">Menú → Recursos</div>
+      <h1>Recursos Didácticos</h1>
+      <div class="subtitle">Materiales de apoyo para el aprendizaje</div>
+    </div>
+    <p>Aquí encontrarás todos los materiales complementarios del curso: documentos, enlaces, vídeos y referencias bibliográficas.</p>
+    <h2>📄 Documentos descargables</h2>
+    <ul>
+      <li><span class="tag">PDF</span> Guía del alumno — Descripción general del curso</li>
+      <li><span class="tag">PDF</span> Glosario de términos — Vocabulario esencial</li>
+      <li><span class="tag">DOC</span> Plantilla para actividades</li>
+    </ul>
+    <h2>🔗 Enlaces de interés</h2>
+    <ul>
+      <li>Biblioteca digital del centro educativo</li>
+      <li>Repositorio de ejercicios resueltos</li>
+      <li>Foro de preguntas y respuestas</li>
+    </ul>
+    <h2>🎥 Vídeos recomendados</h2>
+    <p>Se recomiendan vídeos explicativos de cada uno de los bloques temáticos. Consulta el canal del curso para acceder a ellos.</p>
+    <div class="info-box"><strong>📌 Nota</strong>Todos los recursos son de uso exclusivo para el alumnado matriculado en este curso.</div>
+  `,
+
+  /* ── EVALUACIÓN ───────────────────────────────────────────────────
+     Criterios, calendario de entregas y escala de calificaciones.
+     Actualizar los porcentajes y fechas según el programa real del curso.
+  ────────────────────────────────────────────────────────────────── */
+  evaluacion: `
+    <div class="page-header">
+      <div class="breadcrumb">Menú → Evaluación</div>
+      <h1>Sistema de Evaluación</h1>
+      <div class="subtitle">Criterios, pruebas y calificaciones</div>
+    </div>
+    <h2>📋 Criterios de evaluación</h2>
+    <p>La evaluación del curso se estructura en los siguientes bloques:</p>
+    <ul>
+      <li><strong>Participación activa</strong> — 20% de la nota final</li>
+      <li><strong>Actividades por capítulo</strong> — 40% de la nota final</li>
+      <li><strong>Prueba final</strong> — 40% de la nota final</li>
+    </ul>
+    <h2>📅 Calendario de entregas</h2>
+    <ul>
+      <li>Actividad Capítulo 1 y 2 — Semana 4</li>
+      <li>Actividad Capítulo 3 — Semana 7</li>
+      <li>Actividad Final (Cap. 4) — Última semana</li>
+    </ul>
+    <div class="info-box"><strong>⚠️ Importante</strong>Para superar el curso es necesario obtener al menos un 5 sobre 10 en la prueba final.</div>
+    <h2>🏆 Escala de calificaciones</h2>
+    <ul>
+      <li>9 – 10 → Sobresaliente</li>
+      <li>7 – 8.9 → Notable</li>
+      <li>5 – 6.9 → Aprobado</li>
+      <li>0 – 4.9 → Suspenso</li>
+    </ul>
+  `,
+
+  /* ── CONTACTO ─────────────────────────────────────────────────────
+     Datos de contacto y horarios de tutoría.
+     EDITAR: actualizar email, horarios y nombre del departamento.
+  ────────────────────────────────────────────────────────────────── */
+  contacto: `
+    <div class="page-header">
+      <div class="breadcrumb">Menú → Contacto</div>
+      <h1>Contacto</h1>
+      <div class="subtitle">¿Tienes alguna duda? Escríbenos</div>
+    </div>
+    <p>Para cualquier consulta relacionada con el curso, puedes ponerte en contacto a través de los siguientes medios:</p>
+    <h2>📬 Datos de contacto</h2>
+    <ul>
+      <li><strong>Email:</strong> curso@ejemplo.es</li>
+      <li><strong>Horario de atención:</strong> Lunes a Viernes, 9:00 – 14:00</li>
+      <li><strong>Tutorías presenciales:</strong> Martes y Jueves, 11:00 – 13:00</li>
+    </ul>
+    <h2>💬 Foro del curso</h2>
+    <p>También puedes usar el foro interno del curso para plantear preguntas al profesor o compartir ideas con tus compañeros.</p>
+    <div class="info-box"><strong>📌 Aviso</strong>Las consultas por email serán respondidas en un plazo máximo de 48 horas lectivas.</div>
+  `,
+
+  /* ════════════════════════════════════════════════════════════════
+     SUBCAPÍTULOS — CAPÍTULO 1: INTRODUCCIÓN
+  ════════════════════════════════════════════════════════════════ */
+
+  /* ── 1.1 Presentación del curso ─────────────────────────────────
+     Primera sección del curso. Presentar el docente y la plataforma.
+  ────────────────────────────────────────────────────────────────── */
+  '1.1': `
+    <div class="page-header">
+      <div class="breadcrumb">Capítulo 1 → Introducción</div>
+      <h1>1.1 Presentación del curso</h1>
+      <div class="subtitle">Conoce el curso, el profesor y la plataforma</div>
+    </div>
+    <p>Bienvenido/a a este curso. En esta primera sección encontrarás toda la información necesaria para comenzar con buen pie: quién soy, de qué trata la asignatura y cómo vamos a trabajar juntos a lo largo de las próximas semanas.</p>
+    <h2>¿De qué trata este curso?</h2>
+    <p>Este curso cubre los contenidos fundamentales de la materia, combinando teoría y práctica de forma equilibrada. El objetivo es que al finalizar seas capaz de aplicar los conocimientos adquiridos en situaciones reales.</p>
+    <h2>Sobre el profesorado</h2>
+    <p>El equipo docente cuenta con amplia experiencia tanto en el ámbito académico como en el profesional, lo que garantiza un enfoque práctico y actualizado de los contenidos.</p>
+    <div class="info-box"><strong>🎓 Importante</strong>Revisa la guía del alumno disponible en la sección <em>Recursos</em> antes de comenzar. Contiene toda la información sobre el funcionamiento del curso.</div>
+    <h2>Plataforma y materiales</h2>
+    <p>Todos los materiales del curso están disponibles en esta plataforma. Podrás acceder en cualquier momento y desde cualquier dispositivo.</p>
+  `,
+
+  /* ── 1.2 Objetivos y metodología ────────────────────────────────
+     Qué aprenderá el alumno y cómo se estructurará el trabajo.
+  ────────────────────────────────────────────────────────────────── */
+  '1.2': `
+    <div class="page-header">
+      <div class="breadcrumb">Capítulo 1 → Introducción</div>
+      <h1>1.2 Objetivos y metodología</h1>
+      <div class="subtitle">¿Qué aprenderás? ¿Cómo vamos a trabajar?</div>
+    </div>
+    <h2>Objetivos del curso</h2>
+    <p>Al finalizar este curso, el alumnado será capaz de:</p>
+    <ul>
+      <li>Comprender los fundamentos teóricos de la materia.</li>
+      <li>Aplicar los conceptos a situaciones y problemas reales.</li>
+      <li>Desarrollar un pensamiento crítico y analítico.</li>
+      <li>Trabajar de forma autónoma y colaborativa.</li>
+    </ul>
+    <h2>Metodología</h2>
+    <p>La metodología del curso combina explicaciones teóricas, actividades prácticas y resolución de casos. Se fomenta la participación activa y el aprendizaje basado en problemas.</p>
+    <div class="card-grid">
+      <div class="card-item"><span class="icon">📖</span>Lectura comprensiva</div>
+      <div class="card-item"><span class="icon">🧩</span>Actividades prácticas</div>
+      <div class="card-item"><span class="icon">💬</span>Debate y reflexión</div>
+      <div class="card-item"><span class="icon">📝</span>Evaluación continua</div>
+    </div>
+  `,
+
+  /* ════════════════════════════════════════════════════════════════
+     SUBCAPÍTULOS — CAPÍTULO 2: FUNDAMENTOS
+  ════════════════════════════════════════════════════════════════ */
+
+  /* ── 2.1 Conceptos básicos ──────────────────────────────────────
+     Bases conceptuales imprescindibles para todo el resto del curso.
+  ────────────────────────────────────────────────────────────────── */
+  '2.1': `
+    <div class="page-header">
+      <div class="breadcrumb">Capítulo 2 → Fundamentos</div>
+      <h1>2.1 Conceptos básicos</h1>
+      <div class="subtitle">Los pilares sobre los que se construye todo lo demás</div>
+    </div>
+    <p>En esta sección establecemos las bases conceptuales que serán imprescindibles para comprender el resto de los contenidos. Es importante no avanzar sin haber asimilado bien estos fundamentos.</p>
+    <h2>Concepto A</h2>
+    <p>Descripción detallada del primer concepto fundamental. Se explica su origen, su definición precisa y sus implicaciones prácticas en el contexto de la asignatura.</p>
+    <h2>Concepto B</h2>
+    <p>El segundo concepto fundamental complementa al anterior. Juntos forman el núcleo teórico del módulo introductorio.</p>
+    <div class="info-box"><strong>🔑 Clave</strong>Estos conceptos aparecerán de forma recurrente a lo largo de todo el curso. Asegúrate de comprenderlos bien antes de continuar.</div>
+    <h2>Concepto C</h2>
+    <p>El tercer concepto extiende los anteriores e introduce las relaciones entre ellos, preparando al alumno para el marco teórico completo.</p>
+  `,
+
+  /* ── 2.2 Principios esenciales ──────────────────────────────────
+     Reglas que rigen el comportamiento del sistema estudiado.
+  ────────────────────────────────────────────────────────────────── */
+  '2.2': `
+    <div class="page-header">
+      <div class="breadcrumb">Capítulo 2 → Fundamentos</div>
+      <h1>2.2 Principios esenciales</h1>
+      <div class="subtitle">Las reglas que rigen el comportamiento del sistema</div>
+    </div>
+    <h2>Principio 1</h2>
+    <p>El primero de los principios esenciales establece las condiciones bajo las cuales los conceptos estudiados funcionan de forma coherente. Su comprensión es crucial para evitar errores frecuentes.</p>
+    <h2>Principio 2</h2>
+    <p>El segundo principio complementa al anterior y determina las excepciones y casos especiales que se deben tener en cuenta a la hora de aplicar los conceptos.</p>
+    <h2>Principio 3</h2>
+    <p>El tercer principio tiene un carácter integrador y permite relacionar todos los elementos del marco teórico en un modelo coherente.</p>
+    <div class="info-box"><strong>💡 Tip</strong>Intenta relacionar cada principio con un ejemplo de la vida real. Esto facilita enormemente la memorización y comprensión.</div>
+  `,
+
+  /* ════════════════════════════════════════════════════════════════
+     SUBCAPÍTULOS — CAPÍTULO 3: DESARROLLO
+  ════════════════════════════════════════════════════════════════ */
+
+  /* ── 3.1 Teoría aplicada ────────────────────────────────────────
+     Puente entre la teoría y la práctica; modelo aplicado a ejemplos.
+  ────────────────────────────────────────────────────────────────── */
+  '3.1': `
+    <div class="page-header">
+      <div class="breadcrumb">Capítulo 3 → Desarrollo</div>
+      <h1>3.1 Teoría aplicada</h1>
+      <div class="subtitle">De la abstracción a la práctica</div>
+    </div>
+    <p>En este punto ya disponemos de las bases teóricas necesarias para comenzar a aplicarlas. Este capítulo actúa como puente entre la teoría pura y la práctica real.</p>
+    <h2>Aplicación del modelo teórico</h2>
+    <p>El modelo teórico desarrollado en los capítulos anteriores se pone a prueba en este apartado. Veremos cómo funciona cuando se aplica a ejemplos concretos y qué ajustes son necesarios.</p>
+    <h2>Análisis de resultados</h2>
+    <p>Una vez aplicado el modelo, es imprescindible analizar los resultados obtenidos de forma crítica. Aprenderemos a interpretar los datos y a extraer conclusiones válidas.</p>
+    <div class="info-box"><strong>🔬 Metodología</strong>Seguiremos el ciclo: Observar → Hipótesis → Aplicar → Analizar → Concluir.</div>
+  `,
+
+  /* ── 3.2 Casos prácticos ────────────────────────────────────────
+     Tres casos reales para consolidar el aprendizaje.
+     Son la base de la Actividad Final 2 (sección 4.2).
+  ────────────────────────────────────────────────────────────────── */
+  '3.2': `
+    <div class="page-header">
+      <div class="breadcrumb">Capítulo 3 → Desarrollo</div>
+      <h1>3.2 Casos prácticos</h1>
+      <div class="subtitle">Aprendizaje basado en situaciones reales</div>
+    </div>
+    <p>Los casos prácticos son una de las herramientas más potentes para consolidar el aprendizaje. A continuación se presentan varios escenarios reales que el alumnado deberá analizar y resolver.</p>
+    <h2>Caso 1 — Situación A</h2>
+    <p>Descripción del primer caso práctico. El alumno debe identificar los conceptos aplicables, analizar la situación y proponer una solución razonada.</p>
+    <h2>Caso 2 — Situación B</h2>
+    <p>El segundo caso introduce una mayor complejidad. Se trabajan varias variables simultáneamente y se requiere integrar conocimientos de múltiples capítulos.</p>
+    <h2>Caso 3 — Situación C</h2>
+    <p>El tercer caso es un reto de síntesis. Pondrá a prueba la capacidad del alumno para integrar todos los aprendizajes del curso en una solución coherente.</p>
+    <div class="info-box"><strong>🏆 Actividad</strong>Resuelve los tres casos y envía tus respuestas al profesor antes de la fecha indicada en el calendario.</div>
+  `,
+
+  /* ════════════════════════════════════════════════════════════════
+     SUBCAPÍTULOS — CAPÍTULO 4: EVALUACIÓN FINAL
+  ════════════════════════════════════════════════════════════════ */
+
+  /* ── 4.1 Repaso general ─────────────────────────────────────────
+     Resumen de todos los capítulos antes de las actividades finales.
+  ────────────────────────────────────────────────────────────────── */
+  '4.1': `
+    <div class="page-header">
+      <div class="breadcrumb">Capítulo 4 → Evaluación Final</div>
+      <h1>4.1 Repaso general</h1>
+      <div class="subtitle">Consolida todo lo aprendido</div>
+    </div>
+    <p>Antes de enfrentarte a las actividades finales, este apartado te ofrece un repaso estructurado de todos los contenidos del curso. Es el momento de identificar lagunas y reforzar los puntos débiles.</p>
+    <h2>Resumen del Capítulo 1</h2>
+    <p>Presentación del curso, objetivos, metodología y guía del alumno. Conceptos introductorios y orientación general.</p>
+    <h2>Resumen del Capítulo 2</h2>
+    <p>Fundamentos teóricos: conceptos clave (A, B, C) y principios esenciales (1, 2, 3). Marco teórico completo.</p>
+    <h2>Resumen del Capítulo 3</h2>
+    <p>Aplicación práctica: teoría aplicada, metodología de análisis y resolución de los tres casos prácticos.</p>
+    <div class="info-box"><strong>📚 Recomendación</strong>Revisa tus apuntes y las actividades entregadas antes de pasar a las actividades finales. La autoevaluación es clave para detectar lo que necesitas repasar.</div>
+  `,
+
+  /* ── 4.2 Actividades finales ────────────────────────────────────
+     Tres actividades de cierre del curso (40% de la nota total).
+     EDITAR: instrucciones, extensiones y fecha de entrega.
+  ────────────────────────────────────────────────────────────────── */
+  '4.2': `
+    <div class="page-header">
+      <div class="breadcrumb">Capítulo 4 → Evaluación Final</div>
+      <h1>4.2 Actividades finales</h1>
+      <div class="subtitle">Demuestra todo lo que has aprendido</div>
+    </div>
+    <p>Las actividades finales constituyen el cierre del curso y representan el 40% de la calificación total. Lee detenidamente las instrucciones antes de comenzar.</p>
+    <h2>Actividad Final 1 — Análisis teórico</h2>
+    <p>Elabora un documento en el que expliques con tus propias palabras los tres conceptos fundamentales del curso y su relación con los principios esenciales. Extensión: 500–800 palabras.</p>
+    <h2>Actividad Final 2 — Caso integrador</h2>
+    <p>Resuelve el caso integrador propuesto por el profesor. Deberás aplicar todos los conocimientos adquiridos durante el curso para proponer una solución argumentada.</p>
+    <h2>Actividad Final 3 — Reflexión personal</h2>
+    <p>Escribe una breve reflexión (200–300 palabras) sobre tu proceso de aprendizaje: qué has aprendido, qué te ha resultado más difícil y cómo aplicarías estos conocimientos en el futuro.</p>
+    <div class="info-box"><strong>📅 Entrega</strong>Envía las tres actividades al correo del profesor antes de la fecha límite indicada en el calendario del curso.</div>
+  `
+
+}; /* ── fin del objeto `pages` ────────────────────────────────────── */
+
+
+/*
+  ════════════════════════════════════════════════════════════════════
+  ARRAY `searchIndex` — ÍNDICE DEL BUSCADOR
+  ════════════════════════════════════════════════════════════════════
+  Cada objeto define una sección buscable con tres campos:
+    · id       → Clave en el objeto `pages` (se usa para navegar)
+    · title    → Título legible mostrado en los resultados
+    · keywords → Palabras clave separadas por espacios (sin tildes).
+                 La búsqueda compara el texto del input contra el título
+                 y contra estas palabras clave (todo en minúsculas).
+
+  CÓMO AMPLIAR EL BUSCADOR:
+    Añadir un objeto nuevo al array con id, título y palabras clave.
+    Las keywords deben estar en minúsculas y sin acentos para que
+    la comparación funcione correctamente con cualquier texto del input.
+    Ejemplo:
+      { id: '5.1', title: 'Nuevo tema', keywords: 'nuevo tema conceptos importantes' },
+  ════════════════════════════════════════════════════════════════════
+*/
+const searchIndex = [
+  { id: '1.1', title: 'Presentación del curso',   keywords: 'presentacion bienvenida introduccion guia alumno' },
+  { id: '1.2', title: 'Objetivos y metodología',  keywords: 'objetivos metodologia aprendizaje evaluacion' },
+  { id: '2.1', title: 'Conceptos básicos',         keywords: 'conceptos basicos fundamentos definicion' },
+  { id: '2.2', title: 'Principios esenciales',     keywords: 'principios esenciales reglas marco teorico' },
+  { id: '3.1', title: 'Teoría aplicada',           keywords: 'teoria aplicada analisis modelo resultados' },
+  { id: '3.2', title: 'Casos prácticos',           keywords: 'casos practicos situaciones reales ejercicios actividad' },
+  { id: '4.1', title: 'Repaso general',            keywords: 'repaso resumen consolidar recordar' },
+  { id: '4.2', title: 'Actividades finales',       keywords: 'actividades finales entrega evaluacion nota' },
+];
+
+
+/*
+  ════════════════════════════════════════════════════════════════════
+  VARIABLE `visited` — REGISTRO DE SECCIONES VISITADAS
+  ════════════════════════════════════════════════════════════════════
+  Un Set de JavaScript que guarda las claves de los subcapítulos
+  visitados en la sesión actual. Se usa para calcular el progreso.
+  No persiste entre sesiones (se reinicia al recargar la página).
+  Para persistencia entre sesiones se podría usar localStorage.
+  ════════════════════════════════════════════════════════════════════
+*/
+const visited = new Set();
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: markVisited(id)
+  ────────────────────────────────────────────────────────────────────
+  Registra la visita a la sección `id` y actualiza la barra de progreso.
+
+  Parámetros:
+    · id (string) → Clave del subcapítulo (p.ej. '2.1')
+
+  Efectos visuales:
+    · #progress-bar: su width% aumenta (0% → 100% al visitar todos)
+    · #progress-text: muestra "X / 8 secciones"
+
+  ⚠ ACTUALIZAR: Si añades/eliminas subcapítulos, cambia la constante
+    `total` para que refleje el número real de secciones del curso.
+  ────────────────────────────────────────────────────────────────────
+*/
+function markVisited(id) {
+  visited.add(id);
+  const total = 8; /* ← número total de subcapítulos del curso */
+  const pct = Math.round((visited.size / total) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = visited.size + ' / ' + total + ' secciones';
+}
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: loadPage(id)
+  ────────────────────────────────────────────────────────────────────
+  Carga el HTML de una página del menú superior en la zona central.
+  NO registra visita ni actualiza el progreso (solo los subcapítulos
+  cuentan para el progreso del curso).
+
+  Parámetros:
+    · id (string) → Clave del objeto `pages`
+                    Válidas: 'home', 'contenidos', 'recursos',
+                             'evaluacion', 'contacto'
+
+  Uso en HTML:  onclick="loadPage('recursos')"
+  ────────────────────────────────────────────────────────────────────
+*/
+function loadPage(id) {
+  const el = document.getElementById('page-content');
+  /* Inyectar HTML de la sección; mensaje de error si la clave no existe */
+  el.innerHTML = pages[id] || '<p>Contenido no disponible.</p>';
+  /* Quitar el resaltado activo de todos los subcapítulos del sidebar */
+  document.querySelectorAll('.subcapitulos a').forEach(a => a.classList.remove('active'));
+}
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: loadContent(id)
+  ────────────────────────────────────────────────────────────────────
+  Carga el HTML de un subcapítulo del índice lateral en la zona central.
+
+  Acciones que realiza (en orden):
+    1. Inyecta el HTML del subcapítulo en #page-content
+    2. Registra la visita con markVisited() → actualiza progreso
+    3. Quita la clase "active" de todos los enlaces de subcapítulos
+    4. Añade "active" al enlace correspondiente en el sidebar
+    5. Abre el capítulo padre en el sidebar (si no estaba abierto)
+
+  Parámetros:
+    · id (string) → Clave del subcapítulo ('1.1' … '4.2')
+
+  Uso en HTML:  onclick="loadContent('3.2')"
+
+  ⚠ ACTUALIZAR chapterMap: si añades capítulos (ch5, ch6…), incluye
+    sus subcapítulos aquí para que el padre se abra automáticamente.
+  ────────────────────────────────────────────────────────────────────
+*/
+function loadContent(id) {
+  /* 1. Mostrar el contenido en la zona central */
+  const el = document.getElementById('page-content');
+  el.innerHTML = pages[id] || '<p>Contenido no disponible.</p>';
+
+  /* 2. Registrar visita y actualizar barra de progreso */
+  markVisited(id);
+
+  /* 3. Limpiar clase "active" de todos los enlaces del sidebar */
+  document.querySelectorAll('.subcapitulos a').forEach(a => a.classList.remove('active'));
+
+  /* 4. Marcar como activo el enlace del subcapítulo seleccionado */
+  document.querySelectorAll('.subcapitulos a').forEach(a => {
+    if (a.getAttribute('onclick') && a.getAttribute('onclick').includes("'" + id + "'")) {
+      a.classList.add('active');
+    }
+  });
+
+  /* 5. Abrir el capítulo padre usando el mapa subcapítulo → capítulo */
+  /* ⚠ ACTUALIZAR este mapa al añadir nuevos capítulos */
+  const chapterMap = {
+    '1.1': 'ch1', '1.2': 'ch1',   /* subcapítulos → Capítulo 1 */
+    '2.1': 'ch2', '2.2': 'ch2',   /* subcapítulos → Capítulo 2 */
+    '3.1': 'ch3', '3.2': 'ch3',   /* subcapítulos → Capítulo 3 */
+    '4.1': 'ch4', '4.2': 'ch4'    /* subcapítulos → Capítulo 4 */
+  };
+  if (chapterMap[id]) openChapter(chapterMap[id]);
+}
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: toggleChapter(id)
+  ────────────────────────────────────────────────────────────────────
+  Alterna el estado abierto/cerrado del capítulo `id` en el sidebar.
+  Añade la clase "open" si no la tiene, o la quita si ya la tiene.
+  La animación CSS (max-height) gestiona la transición visual.
+
+  Parámetros:
+    · id (string) → Id del <li> del capítulo (p.ej. 'ch2')
+
+  Llamada desde:  onclick="toggleChapter('ch2')" en .chapter-header
+  ────────────────────────────────────────────────────────────────────
+*/
+function toggleChapter(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: openChapter(id)
+  ────────────────────────────────────────────────────────────────────
+  Fuerza la apertura del capítulo `id` sin cerrarlo si ya está abierto.
+  La usa internamente loadContent() para mostrar el capítulo padre
+  cuando se navega directamente a un subcapítulo.
+
+  Parámetros:
+    · id (string) → Id del <li> del capítulo (p.ej. 'ch3')
+  ────────────────────────────────────────────────────────────────────
+*/
+function openChapter(id) {
+  document.getElementById(id).classList.add('open'); /* solo añade, nunca quita */
+}
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: setActive(el)
+  ────────────────────────────────────────────────────────────────────
+  Resalta el enlace del navbar que acaba de ser pulsado.
+  Quita la clase "active" de todos los <a> del navbar y la añade
+  solo al elemento pulsado.
+
+  Parámetros:
+    · el (HTMLElement) → El <a> pulsado, pasado como `this` desde HTML
+
+  Uso en HTML:  onclick="loadPage('evaluacion'); setActive(this)"
+  ────────────────────────────────────────────────────────────────────
+*/
+function setActive(el) {
+  document.querySelectorAll('#navbar nav a').forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
+}
+
+
+/*
+  ────────────────────────────────────────────────────────────────────
+  FUNCIÓN: doSearch()
+  ────────────────────────────────────────────────────────────────────
+  Busca el texto del input #search-input en el array `searchIndex`
+  y muestra resultados clicables en #search-results.
+
+  Algoritmo:
+    1. Lee y normaliza (trim + toLowerCase) el texto del input
+    2. Si está vacío → muestra aviso y termina
+    3. Filtra `searchIndex`: incluye items cuyo title o keywords
+       contengan el texto buscado (búsqueda por substring)
+    4. Renderiza los resultados como divs clicables que llaman
+       a loadContent() con el id correspondiente
+    5. Hace visible el área de resultados (clase "visible")
+
+  Se activa con:
+    · Clic en el botón "Buscar"        (onclick="doSearch()")
+    · Tecla Enter en el input          (onkeydown con event.key === 'Enter')
+
+  ⚠ NOTA SOBRE ACENTOS: la búsqueda usa .includes() sin normalizar
+    acentos. Por eso las keywords se escriben sin tildes. Si el usuario
+    escribe "evaluación" (con tilde) no encontrará "evaluacion" en keywords.
+    Para mejorar esto, se podría usar normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    tanto en la query como en los campos comparados.
+  ────────────────────────────────────────────────────────────────────
+*/
+function doSearch() {
+  const q         = document.getElementById('search-input').value.trim().toLowerCase();
+  const resultsEl = document.getElementById('search-results');
+
+  /* Caso: búsqueda vacía */
+  if (!q) {
+    resultsEl.innerHTML = '<p style="color:var(--texto-claro)">Escribe algo para buscar.</p>';
+    resultsEl.classList.add('visible');
+    return;
+  }
+
+  /* Filtrar el índice buscando en título y en keywords */
+  const found = searchIndex.filter(item =>
+    item.title.toLowerCase().includes(q) || item.keywords.includes(q)
+  );
+
+  /* Mostrar resultados o mensaje de "sin resultados" */
+  if (found.length === 0) {
+    resultsEl.innerHTML = '<p style="color:var(--texto-claro)">Sin resultados para <em>"' + q + '"</em>.</p>';
+  } else {
+    resultsEl.innerHTML =
+      '<p style="font-size:0.75rem;color:var(--texto-claro);margin-bottom:6px;">'
+      + found.length + ' resultado(s):</p>'
+      + found.map(r => `
+          <div class="search-result-item" onclick="loadContent('${r.id}')">
+            <strong style="font-size:0.82rem">${r.title}</strong><br>
+            <span style="font-size:0.75rem;color:var(--texto-claro)">Sección ${r.id}</span>
+          </div>
+        `).join('');
+  }
+
+  /* Hacer visible el panel de resultados (era display:none por defecto) */
+  resultsEl.classList.add('visible');
+}
+
+
+/*
+  ════════════════════════════════════════════════════════════════════
+  INICIALIZACIÓN — Se ejecuta al cargar el script (fin del <body>)
+  ════════════════════════════════════════════════════════════════════
+  Carga la página de inicio ('home') en la zona central.
+  Para cambiar la sección mostrada al abrir el curso, sustituir
+  'home' por cualquier otra clave válida del objeto `pages`.
+  ════════════════════════════════════════════════════════════════════
+*/
+loadPage('home');
+
+</script>
+</body>
+</html>

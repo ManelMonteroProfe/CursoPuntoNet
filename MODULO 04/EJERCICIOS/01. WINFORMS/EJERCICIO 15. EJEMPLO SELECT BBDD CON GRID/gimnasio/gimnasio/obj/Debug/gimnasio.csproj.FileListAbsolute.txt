@@ -1,0 +1,10 @@
+D:\proyectos\gimnasio\gimnasio\bin\Debug\gimnasio.exe.config
+D:\proyectos\gimnasio\gimnasio\bin\Debug\gimnasio.exe
+D:\proyectos\gimnasio\gimnasio\bin\Debug\gimnasio.pdb
+D:\proyectos\gimnasio\gimnasio\obj\Debug\gimnasio.csproj.AssemblyReference.cache
+D:\proyectos\gimnasio\gimnasio\obj\Debug\gimnasio.Properties.Resources.resources
+D:\proyectos\gimnasio\gimnasio\obj\Debug\gimnasio.csproj.GenerateResource.cache
+D:\proyectos\gimnasio\gimnasio\obj\Debug\gimnasio.csproj.CoreCompileInputs.cache
+D:\proyectos\gimnasio\gimnasio\obj\Debug\gimnasio.exe
+D:\proyectos\gimnasio\gimnasio\obj\Debug\gimnasio.pdb
+D:\proyectos\gimnasio\gimnasio\obj\Debug\gimnasio.Form1.resources

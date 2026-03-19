@@ -1,0 +1,49 @@
+/* HOJA DE ESTILOS */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Nav */
+.header {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.nav a {
+  margin-right: 12px;
+  text-decoration: none;
+  color: #333;
+}
+
+/* 3 zonas */
+.contenedor {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+
+.izquierda, .centro, .derecha {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px; /* suave, opcional */
+}
+
+/* Anchos */
+.izquierda { width: 20%; background: #f3f8ff; }  /* azul muy suave */
+.centro    { width: 60%; background: #f6fff3; }  /* verde muy suave */
+.derecha   { width: 20%; background: #fff6f3; }  /* rojo/rosa muy suave */
+
+/* Footer */
+.footer {
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  text-align: center;
+}
